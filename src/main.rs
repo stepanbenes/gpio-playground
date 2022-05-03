@@ -70,10 +70,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     let pwm = Pwm::with_frequency(Channel::Pwm0, 2.0, 0.25, Polarity::Normal, true)?;
         
     // Sleep for 10 seconds while the LED blinks.
-    thread::sleep(Duration::from_secs(10));
+    thread::sleep(Duration::from_secs(5));
     
     
-    for i in 0..2000 {
+    for i in 0..1000 {
         pwm.set_frequency(100.0, (i % 100) as f64 * 0.01f64)?;
         thread::sleep(Duration::from_millis(10));
     }
