@@ -48,9 +48,17 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let pulse: Arc<Mutex<Pulse>> = Arc::new(Mutex::new(Pulse::empty()));
     let pulse_cloned = pulse.clone();
-    echo_pin.set_async_interrupt(Trigger::RisingEdge, move |_level| pulse_cloned.lock().unwrap().start = Some(std::time::Instant::now()))?;
+    echo_pin.set_async_interrupt(Trigger::RisingEdge, move |_level| {
+        let instant = std::time::Instant::now();
+        println!("echo rising: {:?}", instant);
+        pulse_cloned.lock().unwrap().start = Some(instant);
+    })?;
     let pulse_cloned = pulse.clone();
-    echo_pin.set_async_interrupt(Trigger::FallingEdge, move |_level| pulse_cloned.lock().unwrap().end = Some(std::time::Instant::now()))?;
+    echo_pin.set_async_interrupt(Trigger::FallingEdge, move |_level| {
+        let instant = std::time::Instant::now();
+        println!("echo falling: {:?}", instant);
+        pulse_cloned.lock().unwrap().end = Some(instant);
+    })?;
 
     // measure distance
     trigger_pin.set_high();
