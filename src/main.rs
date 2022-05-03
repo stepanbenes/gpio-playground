@@ -22,7 +22,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut trigger_pin = gpio.get(23)?.into_output();
     let mut echo_pin = gpio.get(24)?.into_input();
 
-    echo_pin.set_async_interrupt(Trigger::RisingEdge, |level| println!("echo: {}", level))?;
+    echo_pin.set_async_interrupt(Trigger::FallingEdge, |level| println!("echo: {}", level))?;
 
     //trigger_pin.set_high();
     //trigger_pin.set_low();
