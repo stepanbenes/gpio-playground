@@ -15,7 +15,7 @@ use std::time::Duration;
 use std::sync::{Arc, Mutex};
 
 use rppal::pwm::{Channel, Polarity, Pwm};
-use rppal::gpio::{Trigger};
+use rppal::gpio::{Trigger, Level};
 
 struct Pulse {
     start: Option<std::time::Instant>,
@@ -48,16 +48,16 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let pulse: Arc<Mutex<Pulse>> = Arc::new(Mutex::new(Pulse::empty()));
     let pulse_cloned = pulse.clone();
-    echo_pin.set_async_interrupt(Trigger::RisingEdge, move |_level| {
+    echo_pin.set_async_interrupt(Trigger::Both, move |level| {
         let instant = std::time::Instant::now();
-        println!("echo rising: {:?}", instant);
-        pulse_cloned.lock().unwrap().start = Some(instant);
-    })?;
-    let pulse_cloned = pulse.clone();
-    echo_pin.set_async_interrupt(Trigger::FallingEdge, move |_level| {
-        let instant = std::time::Instant::now();
-        println!("echo falling: {:?}", instant);
-        pulse_cloned.lock().unwrap().end = Some(instant);
+        if level == Level::High {
+            println!("echo raising: {:?}", instant);
+            pulse_cloned.lock().unwrap().start = Some(instant);
+        }
+        else if level == Level::Low {
+            println!("echo falling: {:?}", instant);
+            pulse_cloned.lock().unwrap().end = Some(instant);
+        }
     })?;
 
     // measure distance
