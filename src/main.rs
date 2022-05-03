@@ -26,8 +26,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     println!("init echo is_high: {}", echo_pin.is_high());
 
-    echo_pin.set_async_interrupt(Trigger::RisingEdge, |level| println!("up echo: {}", level))?;
-    echo_pin.set_async_interrupt(Trigger::FallingEdge, |level| println!("down echo: {}", level))?;
+    echo_pin.set_async_interrupt(Trigger::Both, |level| println!("echo: {}", level))?;
 
     //trigger_pin.set_low();
     
