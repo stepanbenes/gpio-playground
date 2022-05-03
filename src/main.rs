@@ -67,16 +67,16 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     
     // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
-    let pwm = Pwm::with_frequency(Channel::Pwm0, 2.0, 0.25, Polarity::Normal, true)?;
+    //let pwm = Pwm::with_frequency(Channel::Pwm0, 2.0, 0.25, Polarity::Normal, true)?;
         
     // Sleep for 10 seconds while the LED blinks.
     thread::sleep(Duration::from_secs(5));
     
     
-    for i in 0..1000 {
-        pwm.set_frequency(100.0, (i % 100) as f64 * 0.01f64)?;
-        thread::sleep(Duration::from_millis(10));
-    }
+    // for i in 0..1000 {
+    //     pwm.set_frequency(100.0, (i % 100) as f64 * 0.01f64)?;
+    //     thread::sleep(Duration::from_millis(10));
+    // }
         
     let pulse_length = pulse.lock().unwrap().length();
 
