@@ -70,7 +70,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     //let pwm = Pwm::with_frequency(Channel::Pwm0, 2.0, 0.25, Polarity::Normal, true)?;
         
     // Sleep for 10 seconds while the LED blinks.
-    thread::sleep(Duration::from_secs(5));
+    thread::sleep(Duration::from_secs(1));
     
     
     // for i in 0..1000 {
@@ -80,7 +80,13 @@ fn main() -> Result<(), Box<dyn Error>> {
         
     let pulse_length = pulse.lock().unwrap().length();
 
-    println!("{:?}", pulse_length);
+    if let Some(duration) = pulse_length {
+        let distance = duration.as_secs_f64() * 17150_f64;
+        println!("Distance: {} cm", distance);
+    }
+    else {
+        println!("No distance measured");
+    }
 
     Ok(())
 
