@@ -26,7 +26,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     println!("init echo is_high: {}", echo_pin.is_high());
 
-    echo_pin.set_async_interrupt(Trigger::Both, |level| println!("echo: {}", level))?;
+    echo_pin.set_async_interrupt(Trigger::Both, |level| println!("echo: {} {:?}", level, std::time::Instant::now()))?;
 
     //trigger_pin.set_low();
     
