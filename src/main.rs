@@ -13,8 +13,19 @@ use std::thread;
 use std::time::Duration;
 
 use rppal::pwm::{Channel, Polarity, Pwm};
+use rppal::gpio::{Trigger};
 
 fn main() -> Result<(), Box<dyn Error>> {
+
+    let gpio = rppal::gpio::Gpio::new()?;
+
+    let mut trigger_pin = gpio.get(23)?.into_output();
+    let mut echo_pin = gpio.get(24)?.into_input();
+
+    echo_pin.set_async_interrupt(Trigger::RisingEdge, |level| println!("echo: {}", level))?;
+
+    trigger_pin.set_high();
+    trigger_pin.set_low();
 
     // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
     let pwm = Pwm::with_frequency(Channel::Pwm0, 2.0, 0.25, Polarity::Normal, true)?;
@@ -26,6 +37,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         pwm.set_frequency(100.0, (i % 100) as f64 * 0.01f64)?;
         thread::sleep(Duration::from_millis(10));
     }
+
+
 
     Ok(())
 
