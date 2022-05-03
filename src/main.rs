@@ -66,20 +66,14 @@ fn main() -> Result<(), Box<dyn Error>> {
     trigger_pin.set_low();
 
     
-    // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
-    //let pwm = Pwm::with_frequency(Channel::Pwm0, 2.0, 0.25, Polarity::Normal, true)?;
-        
+    
     // Sleep for 10 seconds while the LED blinks.
     thread::sleep(Duration::from_secs(1));
     
     
-    // for i in 0..1000 {
-    //     pwm.set_frequency(100.0, (i % 100) as f64 * 0.01f64)?;
-    //     thread::sleep(Duration::from_millis(10));
-    // }
-        
+    
     let pulse_length = pulse.lock().unwrap().length();
-
+    
     if let Some(duration) = pulse_length {
         let distance = duration.as_secs_f64() * 17150_f64;
         println!("Distance: {} cm", distance);
@@ -87,7 +81,15 @@ fn main() -> Result<(), Box<dyn Error>> {
     else {
         println!("No distance measured");
     }
+    
+    // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
+    let pwm = Pwm::with_frequency(Channel::Pwm0, 2.0, 0.25, Polarity::Normal, true)?;
 
+    for i in 0..1000 {
+        pwm.set_frequency(100.0, (i % 100) as f64 * 0.01f64)?;
+        thread::sleep(Duration::from_millis(10));
+    }
+        
     Ok(())
 
     // When the pwm variable goes out of scope, the PWM channel is automatically disabled.
