@@ -81,6 +81,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     else {
         println!("No distance measured");
     }
+
+    echo_pin.clear_async_interrupt()?;
     
     // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
     let pwm = Pwm::with_frequency(Channel::Pwm0, 2.0, 0.25, Polarity::Normal, true)?;
