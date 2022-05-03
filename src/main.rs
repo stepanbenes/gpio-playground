@@ -24,8 +24,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     echo_pin.set_async_interrupt(Trigger::RisingEdge, |level| println!("echo: {}", level))?;
 
-    trigger_pin.set_high();
-    trigger_pin.set_low();
+    //trigger_pin.set_high();
+    //trigger_pin.set_low();
 
     // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
     let pwm = Pwm::with_frequency(Channel::Pwm0, 2.0, 0.25, Polarity::Normal, true)?;
