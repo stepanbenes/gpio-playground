@@ -22,6 +22,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut trigger_pin = gpio.get(23)?.into_output();
     let mut echo_pin = gpio.get(24)?.into_input();
 
+    trigger_pin.set_low();
+
     println!("init echo is_high: {}", echo_pin.is_high());
 
     echo_pin.set_async_interrupt(Trigger::Both, |level| println!("echo: {}", level))?;
@@ -35,6 +37,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     thread::sleep(Duration::from_secs(10));
     
     trigger_pin.set_high();
+    thread::sleep(Duration::from_micros(10));
     trigger_pin.set_low();
 
     for i in 0..2000 {
