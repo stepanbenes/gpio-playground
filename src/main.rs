@@ -35,18 +35,18 @@ fn main() -> Result<(), Box<dyn Error>> {
     //let pwm = Pwm::with_frequency(Channel::Pwm0, 2.0, 0.25, Polarity::Normal, true)?;
         
     // Sleep for 2 seconds while the LED blinks.
-    //thread::sleep(Duration::from_secs(10));
     
     trigger_pin.set_high();
     thread::sleep(Duration::from_micros(10));
     trigger_pin.set_low();
-
+    
     // for i in 0..2000 {
-    //     pwm.set_frequency(100.0, (i % 100) as f64 * 0.01f64)?;
-    //     thread::sleep(Duration::from_millis(10));
-    // }
-
-
+        //     pwm.set_frequency(100.0, (i % 100) as f64 * 0.01f64)?;
+        //     thread::sleep(Duration::from_millis(10));
+        // }
+        
+        
+    thread::sleep(Duration::from_secs(10));
 
     Ok(())
 
