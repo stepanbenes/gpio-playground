@@ -9,11 +9,31 @@
 // signals to prevent an abnormal termination.
 
 use std::error::Error;
+use std::ops::Deref;
 use std::thread;
 use std::time::Duration;
+use std::sync::{Arc, Mutex};
 
 use rppal::pwm::{Channel, Polarity, Pwm};
 use rppal::gpio::{Trigger};
+
+struct Pulse {
+    start: Option<std::time::Instant>,
+    end: Option<std::time::Instant>,
+}
+
+impl Pulse {
+    fn empty() -> Self {
+        Pulse { start: None, end: None }
+    }
+
+    fn length(&self) -> Option<std::time::Duration> {
+        match (self.start, self.end) {
+            (Some(start), Some(end)) => Some(end.duration_since(start)),
+            _ => None
+        }
+    }
+}
 
 fn main() -> Result<(), Box<dyn Error>> {
 
@@ -26,26 +46,33 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     println!("init echo is_high: {}", echo_pin.is_high());
 
-    echo_pin.set_async_interrupt(Trigger::Both, |level| println!("echo: {} {:?}", level, std::time::Instant::now()))?;
+    let pulse: Arc<Mutex<Pulse>> = Arc::new(Mutex::new(Pulse::empty()));
+    let pulse_cloned = pulse.clone();
+    echo_pin.set_async_interrupt(Trigger::RisingEdge, move |_level| pulse_cloned.lock().unwrap().start = Some(std::time::Instant::now()))?;
+    let pulse_cloned = pulse.clone();
+    echo_pin.set_async_interrupt(Trigger::FallingEdge, move |_level| pulse_cloned.lock().unwrap().end = Some(std::time::Instant::now()))?;
 
-    //trigger_pin.set_low();
-    
-    // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
-    //let pwm = Pwm::with_frequency(Channel::Pwm0, 2.0, 0.25, Polarity::Normal, true)?;
-        
-    // Sleep for 2 seconds while the LED blinks.
-    
+    // measure distance
     trigger_pin.set_high();
     thread::sleep(Duration::from_micros(10));
     trigger_pin.set_low();
+
     
-    // for i in 0..2000 {
-        //     pwm.set_frequency(100.0, (i % 100) as f64 * 0.01f64)?;
-        //     thread::sleep(Duration::from_millis(10));
-        // }
+    // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
+    let pwm = Pwm::with_frequency(Channel::Pwm0, 2.0, 0.25, Polarity::Normal, true)?;
         
-        
+    // Sleep for 10 seconds while the LED blinks.
     thread::sleep(Duration::from_secs(10));
+    
+    
+    for i in 0..2000 {
+        pwm.set_frequency(100.0, (i % 100) as f64 * 0.01f64)?;
+        thread::sleep(Duration::from_millis(10));
+    }
+        
+    let pulse_length = pulse.lock().unwrap().length();
+
+    println!("{:?}", pulse_length);
 
     Ok(())
 
