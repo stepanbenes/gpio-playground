@@ -22,7 +22,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut trigger_pin = gpio.get(23)?.into_output();
     let mut echo_pin = gpio.get(24)?.into_input();
 
-    echo_pin.set_async_interrupt(Trigger::Disabled, |level| println!("echo: {}", level))?;
+    trigger_pin.set_high();
+    
+    echo_pin.set_interrupt(Trigger::RisingEdge)?;
 
     //trigger_pin.set_low();
     
@@ -32,7 +34,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Sleep for 2 seconds while the LED blinks.
     thread::sleep(Duration::from_secs(10));
     
-    trigger_pin.set_high();
 
     for i in 0..2000 {
         pwm.set_frequency(100.0, (i % 100) as f64 * 0.01f64)?;
