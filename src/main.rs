@@ -39,8 +39,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let gpio = rppal::gpio::Gpio::new()?;
 
-    let mut trigger_pin = gpio.get(24)?.into_output();
-    let mut echo_pin = gpio.get(23)?.into_input();
+    let mut trigger_pin = gpio.get(23)?.into_output();
+    let mut echo_pin = gpio.get(24)?.into_input();
 
     trigger_pin.set_low();
 
