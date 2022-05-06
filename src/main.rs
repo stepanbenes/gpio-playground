@@ -82,13 +82,19 @@ fn main() -> Result<(), Box<dyn Error>> {
         println!("No distance measured");
     }
 
+    // wait before running motors
+    thread::sleep(Duration::from_secs(10));
     
     // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
-    let pwm = Pwm::with_frequency(Channel::Pwm0, 50.0, 0.25, Polarity::Normal, true)?;
+    let pwm = Pwm::with_frequency(Channel::Pwm0, 100.0, 0.25, Polarity::Normal, true)?;
 
-    for i in 0..1000 {
-        pwm.set_frequency(100.0, (i % 100) as f64 * 0.01f64)?;
-        thread::sleep(Duration::from_millis(10));
+    for i in 0..=100 {
+        pwm.set_frequency(100.0, i as f64 * 0.01f64)?;
+        thread::sleep(Duration::from_millis(100));
+    }
+    for i in 0..=100 {
+        pwm.set_frequency(100.0, 1_f64 - (i as f64 * 0.01f64))?;
+        thread::sleep(Duration::from_millis(100));
     }
         
     Ok(())
