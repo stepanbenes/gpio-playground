@@ -9,7 +9,6 @@
 // signals to prevent an abnormal termination.
 
 use std::error::Error;
-use std::ops::Deref;
 use std::thread;
 use std::time::Duration;
 use std::sync::{Arc, Mutex};
@@ -44,7 +43,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     trigger_pin.set_low();
 
-    thread::sleep(Duration::from_secs(2));
+    thread::sleep(Duration::from_secs(1));
 
     println!("init echo is_high: {}", echo_pin.is_high());
 
