@@ -39,8 +39,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let gpio = rppal::gpio::Gpio::new()?;
 
-    let mut trigger_pin = gpio.get(23)?.into_output();
-    let mut echo_pin = gpio.get(24)?.into_input();
+    let mut trigger_pin = gpio.get(24)?.into_output();
+    let mut echo_pin = gpio.get(23)?.into_input();
 
     trigger_pin.set_low();
 
@@ -84,7 +84,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     
     // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
-    let pwm = Pwm::with_frequency(Channel::Pwm0, 2.0, 0.25, Polarity::Normal, true)?;
+    let pwm = Pwm::with_frequency(Channel::Pwm0, 50.0, 0.25, Polarity::Normal, true)?;
 
     for i in 0..1000 {
         pwm.set_frequency(100.0, (i % 100) as f64 * 0.01f64)?;
