@@ -44,6 +44,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     trigger_pin.set_low();
 
+    thread::sleep(Duration::from_secs(2));
+
     println!("init echo is_high: {}", echo_pin.is_high());
 
     let pulse: Arc<Mutex<Pulse>> = Arc::new(Mutex::new(Pulse::empty()));
