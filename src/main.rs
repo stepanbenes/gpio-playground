@@ -31,8 +31,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     
     // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
-    let pwm0 = Pwm::with_frequency(Channel::Pwm0, 25.0, 0.52, Polarity::Normal, false)?;
-    let pwm1 = Pwm::with_frequency(Channel::Pwm1, 25.0, 0.52, Polarity::Normal, false)?;
+    let pwm0 = Pwm::with_frequency(Channel::Pwm0, 25.0, 0.50, Polarity::Normal, false)?;
+    let pwm1 = Pwm::with_frequency(Channel::Pwm1, 25.0, 0.50, Polarity::Normal, false)?;
     
     // wait before running motors
     thread::sleep(Duration::from_secs(1));
