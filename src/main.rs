@@ -59,11 +59,11 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     thread::sleep(Duration::from_secs(2));
 
-    // for i in 25..=100 {
-    //     pwm0.set_frequency(100.0, i as f64 * 0.01f64)?;
-    //     pwm1.set_frequency(100.0, i as f64 * 0.01f64)?;
-    //     thread::sleep(Duration::from_millis(100));
-    // }
+    for i in 50..=100 {
+        pwm0.set_duty_cycle(i as f64 * 0.01_f64)?;
+        pwm1.set_duty_cycle(i as f64 * 0.01_f64)?;
+        thread::sleep(Duration::from_millis(100));
+    }
 
     // for i in 0..=100 {
     //     pwm0.set_frequency(100.0, 1_f64 - (i as f64 * 0.01f64))?;
