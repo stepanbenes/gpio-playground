@@ -11,28 +11,8 @@
 use std::error::Error;
 use std::thread;
 use std::time::Duration;
-use std::sync::{Arc, Mutex};
 
 use rppal::pwm::{Channel, Polarity, Pwm};
-use rppal::gpio::{Trigger, Level};
-
-struct Pulse {
-    start: Option<std::time::Instant>,
-    end: Option<std::time::Instant>,
-}
-
-impl Pulse {
-    fn empty() -> Self {
-        Pulse { start: None, end: None }
-    }
-
-    fn length(&self) -> Option<std::time::Duration> {
-        match (self.start, self.end) {
-            (Some(start), Some(end)) => Some(end.duration_since(start)),
-            _ => None
-        }
-    }
-}
 
 fn main() -> Result<(), Box<dyn Error>> {
 
@@ -60,11 +40,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     pwm0.enable()?;
     pwm1.enable()?;
 
-    pwm0.set_duty_cycle(0.5);
+    pwm0.set_duty_cycle(0.5)?;
 
     thread::sleep(Duration::from_secs(1));
 
-    pwm0.set_duty_cycle(1.0);
+    pwm0.set_duty_cycle(1.0)?;
 
     thread::sleep(Duration::from_secs(2));
 
