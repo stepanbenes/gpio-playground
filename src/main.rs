@@ -49,20 +49,23 @@ fn main() -> Result<(), Box<dyn Error>> {
     forward2_pin.set_high();
     backward2_pin.set_low();
 
+    
+    // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
+    let pwm0 = Pwm::with_frequency(Channel::Pwm0, 100.0, 1.0, Polarity::Normal, false)?;
+    let pwm1 = Pwm::with_frequency(Channel::Pwm1, 100.0, 1.0, Polarity::Normal, false)?;
+    
     // wait before running motors
     thread::sleep(Duration::from_secs(1));
 
-    // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
-    let pwm0 = Pwm::with_frequency(Channel::Pwm0, 100.0, 1.0, Polarity::Normal, true)?;
-    let pwm1 = Pwm::with_frequency(Channel::Pwm1, 100.0, 1.0, Polarity::Normal, true)?;
+    pwm0.enable()?;
+    pwm1.enable()?;
 
-    thread::sleep(Duration::from_secs(5));
-
-    // for i in 0..=100 {
-    //     pwm0.set_frequency(100.0, i as f64 * 0.01f64)?;
-    //     pwm1.set_frequency(100.0, i as f64 * 0.01f64)?;
-    //     thread::sleep(Duration::from_millis(100));
-    // }
+    for i in 25..=100 {
+        pwm0.set_frequency(100.0, i as f64 * 0.01f64)?;
+        pwm1.set_frequency(100.0, i as f64 * 0.01f64)?;
+        thread::sleep(Duration::from_millis(100));
+    }
+    
     // for i in 0..=100 {
     //     pwm0.set_frequency(100.0, 1_f64 - (i as f64 * 0.01f64))?;
     //     pwm1.set_frequency(100.0, 1_f64 - (i as f64 * 0.01f64))?;
