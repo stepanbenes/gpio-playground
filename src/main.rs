@@ -40,8 +40,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let mut forward1_pin = gpio.get(22)?.into_output();
     let mut backward1_pin = gpio.get(23)?.into_output();
-    let mut forward2_pin = gpio.get(24)?.into_output();
-    let mut backward2_pin = gpio.get(25)?.into_output();
+    let mut forward2_pin = gpio.get(25)?.into_output();
+    let mut backward2_pin = gpio.get(24)?.into_output();
 
     forward1_pin.set_high();
     backward1_pin.set_low();
@@ -56,7 +56,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let pwm0 = Pwm::with_frequency(Channel::Pwm0, 100.0, 1.0, Polarity::Normal, true)?;
     let pwm1 = Pwm::with_frequency(Channel::Pwm1, 100.0, 1.0, Polarity::Normal, true)?;
 
-    thread::sleep(Duration::from_secs(1));
+    thread::sleep(Duration::from_secs(5));
 
     // for i in 0..=100 {
     //     pwm0.set_frequency(100.0, i as f64 * 0.01f64)?;
